@@ -5,26 +5,11 @@ var routes = function (Book) {
 
     var bookRouter = express.Router();
 
-    bookRouter.route('/')
-        .post(function (req, resp) {
-            console.log(book);
-            var book = new Book(req.body);
-            console.log(book);
-            book.save();
-            resp.status(201).send(book);
-        })
-        .get(function (req, resp) {
-            var query = req.query;
-            console.log(query);
-            Book.find(query, function (err, books) {
-                if (err) {
-                    resp.status(500);
-                } else {
-                    resp.json(books);
-                }
-            });
+    var bookController = require('../controllers/bookController.js')(Book);
 
-        });
+    bookRouter.route('/')
+        .post(bookController.post)
+        .get(bookController.get);
 
 
     bookRouter.use('/:bookId', function (req, resp, next) {
